@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Admin Backend"
+AuthUserFile /var/www/dartmouthroomsearch.com/public_html/admin/.htpasswd
+Require valid-user
