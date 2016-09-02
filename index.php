@@ -51,6 +51,8 @@
 			Created as a fun side project by Alex Beals '18!
 			If you have any problems, please feel free to email me at Alex.Beals.18@dartmouth.edu
 		-->
+
+		<!-- Google Analytics -->
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -64,59 +66,102 @@
 
 		<!-- Respects 'Request Desktop Site' -->
 		<?php
-			if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i", $_SERVER['HTTP_USER_AGENT'])) {
+			if (preg_match("/(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i", $_SERVER["HTTP_USER_AGENT"])) {
 				?><meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"><?php
 			}
 		?>
 
 	</head>
 	<body>
-		<div id='wrapper'>
-			<div id='header'>
-				<img itemprop="image" src='imgs/logo.png' alt='Dartmouth Room Search Logo white' title='DRC Logo'/>
+		<div id="wrapper">
+			<div id="header">
+				<img itemprop="image" src="imgs/logo.png" alt="Dartmouth Room Search Logo white" title="DRC Logo"/>
 				<a href="//dartmouthroomsearch.com">Dartmouth Room Search</a>
 			</div>
-			<form name='search' id='search' method='post' action=''>
-				I'm looking for a room for between <input type='number' name='minPeople' min='1' value='<?php if (isset($_POST['minPeople'])) {echo $_POST['minPeople'];} else {echo '1';} ?>'> and <input type='number' name='maxPeople' value='<?php if (isset($_POST['maxPeople'])) {echo $_POST['maxPeople'];} else {echo '4';} ?>'> people 
-				with <input type='number' name='minRooms' min='1' value='<?php if (isset($_POST['minRooms'])) {echo $_POST['minRooms'];} else {echo '1';} ?>'> to <input type='number' name='maxRooms' value='<?php if (isset($_POST['maxRooms'])) {echo $_POST['maxRooms'];} else {echo '3';} ?>'> rooms.&nbsp;&nbsp;The roommates will be  
-				<select name='gender'><option value='a' <?php if (isset($_POST['gender']) && $_POST['gender'] == 'a') {echo 'selected';} ?>>guys</option><option value='b' <?php if (isset($_POST['gender']) && $_POST['gender'] == 'b') {echo 'selected';} ?>>girls</option><option value='c' <?php if (isset($_POST['gender']) && $_POST['gender'] == 'c') {echo 'selected';} ?>>both</option></select>, and it 
-				<select name='subFree'><option <?php if (isset($_POST['subFree']) && $_POST['subFree'] == '0') { echo 'selected';} ?> value='0'>should not be</option><option <?php if (isset($_POST['subFree']) && $_POST['subFree'] == '1') { echo 'selected';} ?> value='1'>should be</option></select> substance free.&nbsp;&nbsp;
+			<?php
+				$minPeople = $_POST["minPeople"];
+				$maxPeople = $_POST["maxPeople"];
+
+				$minRooms = $_POST["minRooms"];
+				$maxRooms = $_POST["maxRooms"];
+
+				$gender = $_POST["gender"];
+				$subFree = $_POST["subFree"];
+
+				$building = $_POST["building"];
+
+				$minPeopleSearch = (isset($minPeople) ? $minPeople : "1");
+				$maxPeopleSearch = (isset($maxPeople) ? $maxPeople : "4");
+
+				$minRoomsSearch = (isset($minRooms) ? $minRooms : "1");
+				$maxRoomsSearch = (isset($maxRooms) ? $maxRooms : "3");
+			?>
+			<form name="search" id="search" method="post" action="">
+				I'm looking for a room for between
+				<input type="number" name="minPeople" min="1" value="<?php echo $minPeopleSearch; ?>">
+				and
+				<input type="number" name="maxPeople" value="<?php echo $maxPeopleSearch; ?>">
+				people with 
+				<input type="number" name="minRooms" min="1" value="<?php echo $minRoomsSearch; ?>">
+				to
+				<input type="number" name="maxRooms" value="<?php echo $maxRoomsSearch; ?>">
+				rooms.&nbsp;&nbsp;The roommates will be  
+				<select name="gender">
+					<option value="a" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "a") {echo "selected";} ?>>
+						guys
+					</option>
+					<option value="b" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "b") {echo "selected";} ?>>
+						girls
+					</option>
+					<option value="c" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "c") {echo "selected";} ?>>
+						both
+					</option>
+				</select>
+				, and it 
+				<select name="subFree">
+					<option <?php if (isset($_POST["subFree"]) && $_POST["subFree"] == "0") { echo "selected";} ?> value="0">
+						should not be
+					</option>
+					<option <?php if (isset($_POST["subFree"]) && $_POST["subFree"] == "1") { echo "selected";} ?> value="1">
+						should be
+					</option>
+				</select>
+				substance free.&nbsp;&nbsp;
 				I want the room to be 
-				<select name='building'>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == '') { echo 'selected';} ?> value=''>anywhere</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Andres') { echo 'selected';} ?> value='Andres'>in Andres</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Bildner') { echo 'selected';} ?> value='Bildner'>in Bildner</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Channing Cox') { echo 'selected';} ?> value='Channing Cox'>in Channing Cox</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Mid Fayerweather') { echo 'selected';} ?> value='Mid Fayerweather'>in Mid Fayerweather</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'North Fayerweather') { echo 'selected';} ?> value='North Fayerweather'>in North Fayerweather</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'South Fayerweather') { echo 'selected';} ?> value='South Fayerweather'>in South Fayerweather</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Gile') { echo 'selected';} ?> value='Gile'>in Gile</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Hitchcock') { echo 'selected';} ?> value='Hitchcock'>in Hitchcock</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Lodge') { echo 'selected';} ?> value='Lodge'>in Lodge</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Lord') { echo 'selected';} ?> value='Lord'>in Lord</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Mid Mass') { echo 'selected';} ?> value='Mid Mass'>in Mid Mass</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'North Mass') { echo 'selected';} ?> value='North Mass'>in North Mass</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'South Mass') { echo 'selected';} ?> value='South Mass'>in South Mass</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Maxwell') { echo 'selected';} ?> value='Maxwell'>in Maxwell</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'McCulloch') { echo 'selected';} ?> value='McCulloch'>in McCulloch</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'McLane Hall') { echo 'selected';} ?> value='McLane Hall'>in McLane Hall</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Morton') { echo 'selected';} ?> value='Morton'>in Morton</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'New Hampshire Hall') { echo 'selected';} ?> value='New Hampshire Hall'>in New Hampshire Hall</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Rauner') { echo 'selected';} ?> value='Rauner'>in Rauner</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Richardson') { echo 'selected';} ?> value='Richardson'>in Richardson</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Ripley') { echo 'selected';} ?> value='Ripley'>in Ripley</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Smith') { echo 'selected';} ?> value='Smith'>in Smith</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Streeter') { echo 'selected';} ?> value='Streeter'>in Streeter</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Thomas') { echo 'selected';} ?> value='Thomas'>in Thomas</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Topliff') { echo 'selected';} ?> value='Topliff'>in Topliff</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Wheeler') { echo 'selected';} ?> value='Wheeler'>in Wheeler</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Woodward') { echo 'selected';} ?> value='Woodward'>in Woodward</option>
-					<option <?php if (isset($_POST['building']) && $_POST['building'] == 'Zimmerman') { echo 'selected';} ?> value='Zimmerman'>in Zimmerman</option>
-				</select>, and I want the results to be ordered by <select name='order'><option value='0' <?php if (isset($_POST['order']) && $_POST['order'] == '0') {echo 'selected';} ?>>square feet</option><option value='1' <?php if (isset($_POST['order']) && $_POST['order'] == '1') {echo 'selected';} ?>>square feet per person</option><option value='2' <?php if (isset($_POST['order']) && $_POST['order'] == '2') {echo 'selected';} ?>>number of people</option><option value='3' <?php if (isset($_POST['order']) && $_POST['order'] == '3') {echo 'selected';} ?>>number of rooms</option></select>.<br>
-				<input type='submit' class='search' value='Search!'>
+				<select name="building">
+					<?php
+						$buildingOptions = ["", "Andres", "Bildner", "Channing Cox", "Mid Fayerweather", "North Fayerweather", "South Fayerweather", "Gile", "Hitchcock", "Lodge", "Lord", "Mid Mass", "North Mass", "South Mass", "Maxwell", "McCulloch", "McLane Hall", "Morton", "New Hampshire Hall", "Rauner", "Richardson", "Ripley", "Smith", "Streeter", "Thomas", "Topliff", "Wheeler", "Woodward", "Zimmerman"];
+
+						foreach ($buildingOptions as $buildingOption) {
+							$status = ((isset($building) && $building == $buildingOption) ? "selected" : "");
+							if ($buildingOption == "") {
+								echo "<option $status value='$buildingOption'>anywhere</option>";
+							} else {
+								echo "<option $status value='$buildingOption'>in $buildingOption</option>";
+							}
+						}
+					?>
+				</select>
+				, and I want the results to be ordered by
+				<select name="order">
+					<option value="0" <?php if (isset($_POST["order"]) && $_POST["order"] == "0") {echo "selected";} ?>>
+						square feet
+					</option>
+					<option value="1" <?php if (isset($_POST["order"]) && $_POST["order"] == "1") {echo "selected";} ?>>
+						square feet per person
+					</option>
+					<option value="2" <?php if (isset($_POST["order"]) && $_POST["order"] == "2") {echo "selected";} ?>>
+						number of people
+					</option>
+					<option value="3" <?php if (isset($_POST["order"]) && $_POST["order"] == "3") {echo "selected";} ?>>
+						number of rooms
+					</option>
+				</select>
+				.
+				<input type="submit" class="search" value="Search!">
 			</form>
 
-			<div class='rooms' itemscope itemtype="https://schema.org/CreativeWork">
+			<div class="rooms" itemscope itemtype="https://schema.org/CreativeWork">
 				<meta itemprop="author" content="Alex Beals">
 				<meta itemprop="audience" content="students">
 				<meta itemprop="isFamilyFriendly" content="true">
@@ -130,74 +175,69 @@
 
 				$PDO = createConnection();
 
-				$clause = "";
-				if (isset($_POST['minPeople'])) {
-					$clause = " WHERE numPeople >= {$_POST['minPeople']} AND numPeople <= {$_POST['maxPeople']} AND numRooms >= {$_POST['minRooms']} AND numRooms <= {$_POST['maxRooms']} AND {$_POST['gender']} AND subFree = {$_POST['subFree']}";
-				}
-
-				if (isset($_GET['id'])) {
+				if (isset($_GET["id"])) {
 					$stmt = $PDO->prepare("SELECT * FROM rooms WHERE id=:id");
-					$stmt->bindValue(":id",$_GET['id'],PDO::PARAM_STR);
-				} else if (isset($_POST['minPeople'])) {
-					$genderAttach = '';
-					if ($_POST['gender'] == 'a') {
-						$genderAttach = ' AND (gender = 0 OR gender = 1 OR gender = 2)';
-					} else if ($_POST['gender'] == 'b') {
-						$genderAttach = ' AND (gender = 0 OR gender = 1 OR gender = 3)';
-					} else if ($_POST['gender'] == 'c') {
-						$genderAttach = ' AND (gender = 1)';
+					$stmt->bindValue(":id", $_GET["id"], PDO::PARAM_STR);
+				} else if (isset($minPeople)) {
+					$genderAttach = "";
+					if ($_POST["gender"] == "a") {
+						$genderAttach = " AND (gender = 0 OR gender = 1 OR gender = 2)";
+					} else if ($_POST["gender"] == "b") {
+						$genderAttach = " AND (gender = 0 OR gender = 1 OR gender = 3)";
+					} else if ($_POST["gender"] == "c") {
+						$genderAttach = " AND (gender = 1)";
 					}
 
-					$order = '';
-					if ($_POST['order'] == 0) {
+					$order = "";
+					if ($_POST["order"] == 0) {
 						$order = " ORDER BY squareFeet desc";
-					} else if ($_POST['order'] == 1) {
+					} else if ($_POST["order"] == 1) {
 						$order = " ORDER BY squareFeet / numPeople desc";
-					} else if ($_POST['order'] == 2) {
+					} else if ($_POST["order"] == 2) {
 						$order = " ORDER BY numPeople desc";
-					} else if ($_POST['order'] == 3) {
+					} else if ($_POST["order"] == 3) {
 						$order = " ORDER BY numRooms desc";
 					}
 
-					if (isset($_POST['building']) && $_POST['building'] == '') {
+					if (isset($building) && $building == '') {
 						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND subFree = :subFree" . $genderAttach . $order);
 					} else {
 						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND building = :building AND subFree = :subFree" . $genderAttach . $order);
-						$stmt->bindValue(":building",$_POST['building'],PDO::PARAM_STR);
+						$stmt->bindValue(":building", $building, PDO::PARAM_STR);
 					}
-					$stmt->bindValue(":minPeople",$_POST['minPeople'],PDO::PARAM_STR);
-					$stmt->bindValue(":maxPeople",$_POST['maxPeople'],PDO::PARAM_STR);
-					$stmt->bindValue(":minRooms",$_POST['minRooms'],PDO::PARAM_STR);
-					$stmt->bindValue(":maxRooms",$_POST['maxRooms'],PDO::PARAM_STR);
-					$stmt->bindValue(":subFree",$_POST['subFree'],PDO::PARAM_STR);
+					$stmt->bindValue(":minPeople", $minPeople, PDO::PARAM_STR);
+					$stmt->bindValue(":maxPeople", $maxPeople, PDO::PARAM_STR);
+					$stmt->bindValue(":minRooms", $minRooms, PDO::PARAM_STR);
+					$stmt->bindValue(":maxRooms", $maxRooms, PDO::PARAM_STR);
+					$stmt->bindValue(":subFree", $subFree, PDO::PARAM_STR);
 				} else {
 					$stmt = $PDO->prepare("SELECT * FROM rooms");
 				}
 
 				$stmt->execute();
 
-				$floors = array('Ground Floor','1st Floor','2nd Floor','3rd Floor','4th Floor');
-				$rooms = array('One','Two','Three','Four','Five','Six','Seven');
-				$type = array('single','double','triple','quad','five person suite','six person suite','seven person suite','eight person suite');
-				$gender = array('either gender','both genders','guys','girls');
-				$genderText = array('The room is for either gender','The room is for both genders','The room is for guys','The room is for girls');
-				$bathrooms = array('none'=>'no bathrooms','one'=>'one full bathroom','two'=>'two full bathrooms','half'=>'one half bathroom','two half'=>'two half bathrooms','one, half'=>'one full bathroom and one half bathroom','one shared'=>'one shared bathroom');
+				$floors = ["Ground Floor","1st Floor","2nd Floor","3rd Floor","4th Floor"];
+				$rooms = ["One","Two","Three","Four","Five","Six","Seven"];
+				$type = ["single","double","triple","quad","five person suite","six person suite","seven person suite","eight person suite"];
+				$gender = ["either gender","both genders","guys","girls"];
+				$genderText = ["The room is for either gender","The room is for both genders","The room is for guys","The room is for girls"];
+				$bathrooms = ["none"=>"no bathrooms","one"=>"one full bathroom","two"=>"two full bathrooms","half"=>"one half bathroom","two half"=>"two half bathrooms","one, half"=>"one full bathroom and one half bathroom","one shared"=>"one shared bathroom"];
 
-				$buildCodes = array();
-				$buildLocs = array();
+				$buildCodes = [];
+				$buildLocs = [];
 				$build = $PDO->prepare("SELECT name,code,location FROM buildings");
 				$build->execute();
 				while ($row = $build->fetch(PDO::FETCH_ASSOC)) {
-					$buildCodes[$row['name']] = $row['code'];
-					$buildLocs[$row['name']] = $row['location'];
+					$buildCodes[$row["name"]] = $row["code"];
+					$buildLocs[$row["name"]] = $row["location"];
 				}
 
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					echo '<div class="room">';
 					echo '<div class="top">';
 					if ($row['subFree'] == 1) { echo '<span title="This room is substance free" class="subFree"></span>'; }
-					echo 	'<span title="' . $genderText[$row['gender']] . '" class="squareFeet ' . substr($gender[$row['gender']],0,4) . '" style="width: ' . floor($row['squareFeet']/100)*26 . 'px"></span>';
-					echo 	'<span title="The number of rooms" class="numRooms">' . $row['numRooms'] . '</span>';
+					echo '<span title="' . $genderText[$row['gender']] . '" class="squareFeet ' . substr($gender[$row['gender']],0,4) . '" style="width: ' . floor($row['squareFeet']/100)*26 . 'px"></span>';
+					echo '<span title="The number of rooms" class="numRooms">' . $row['numRooms'] . '</span>';
 					echo '</div>';
 					echo '<span class="info">' . $row['number'] . ' - ' . $row['building'] . ' (' . $floors[$row['floor']] . ')</span>';
 					echo '<span class="details">' . $rooms[$row['numRooms']-1] . ' room, ' . $type[$row['numPeople']-1] . ' - ' . $row['squareFeet'] . ' ft&sup2;</span>';
@@ -208,10 +248,9 @@
 					echo '<a class="link" target="_blank" href="http://dartmouthroomsearch.com?id=' . $row['id'] . '">Link</a>';
 					echo '</div>';
 			    }
-
-			    echo '</div>';
 			?>
-			<div class='footer'>
+			</div>
+			<div class="footer">
 				Alex Beals &#169;2016 <a href="mailto:Alex.Beals.18@dartmouth.edu">Email me here with any issues or requests for features!</a>
 			</div>
 		</div>
