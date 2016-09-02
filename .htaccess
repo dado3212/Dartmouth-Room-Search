@@ -8,3 +8,13 @@
 	ExpiresDefault "now plus 2 days"
 </IfModule>
 ## EXPIRES CACHING ##
+
+## Rewrite ##
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+
+	RewriteRule "^(\d+?)/?$" "index.php?id=$1"
+</IfModule>

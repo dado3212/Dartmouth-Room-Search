@@ -26,25 +26,25 @@
 		<meta name="twitter:card" content="summary">
 		<meta name="twitter:creator" content="@alex_beals">
 
-		<link rel="stylesheet" type="text/css" href="css/display.css">
+		<link rel="stylesheet" type="text/css" href="/css/display.css">
 
 		<!-- Hello a metric ton of favicon code! -->
-		<link rel="apple-touch-icon" sizes="57x57" href="imgs/favicon/apple-icon-57x57.png">
-		<link rel="apple-touch-icon" sizes="60x60" href="imgs/favicon/apple-icon-60x60.png">
-		<link rel="apple-touch-icon" sizes="72x72" href="imgs/favicon/apple-icon-72x72.png">
-		<link rel="apple-touch-icon" sizes="76x76" href="imgs/favicon/apple-icon-76x76.png">
-		<link rel="apple-touch-icon" sizes="114x114" href="imgs/favicon/apple-icon-114x114.png">
-		<link rel="apple-touch-icon" sizes="120x120" href="imgs/favicon/apple-icon-120x120.png">
-		<link rel="apple-touch-icon" sizes="144x144" href="imgs/favicon/apple-icon-144x144.png">
-		<link rel="apple-touch-icon" sizes="152x152" href="imgs/favicon/apple-icon-152x152.png">
-		<link rel="apple-touch-icon" sizes="180x180" href="imgs/favicon/apple-icon-180x180.png">
-		<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="imgs/favicon/favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="96x96" href="imgs/favicon/favicon-96x96.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="imgs/favicon/favicon-16x16.png">
-		<link rel="manifest" href="imgs/favicon/manifest.json">
+		<link rel="apple-touch-icon" sizes="57x57" href="/imgs/favicon/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="/imgs/favicon/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="/imgs/favicon/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="/imgs/favicon/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="/imgs/favicon/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="/imgs/favicon/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="/imgs/favicon/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="/imgs/favicon/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/imgs/favicon/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/imgs/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="/imgs/favicon/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/imgs/favicon/favicon-16x16.png">
+		<link rel="manifest" href="/imgs/favicon/manifest.json">
 		<meta name="msapplication-TileColor" content="#006841">
-		<meta name="msapplication-TileImage" content="imgs/favicon/ms-icon-144x144.png">
+		<meta name="msapplication-TileImage" content="/imgs/favicon/ms-icon-144x144.png">
 		<meta name="theme-color" content="#006841">
 
 		<!--
@@ -75,7 +75,7 @@
 	<body>
 		<div id="wrapper">
 			<div id="header">
-				<img itemprop="image" src="imgs/logo.png" alt="Dartmouth Room Search Logo white" title="DRC Logo"/>
+				<img itemprop="image" src="/imgs/logo.png" alt="Dartmouth Room Search Logo white" title="DRC Logo"/>
 				<a href="//dartmouthroomsearch.com">Dartmouth Room Search</a>
 			</div>
 			<?php
@@ -243,9 +243,9 @@
 					echo '<span class="details">' . $rooms[$row['numRooms']-1] . ' room, ' . $type[$row['numPeople']-1] . ' - ' . $row['squareFeet'] . ' ft&sup2;</span>';
 					echo '<span class="details2">It is ' . ($row['subFree'] == 0 ? 'not substance free' : 'substance free' ) . ', and is for ' . $gender[$row['gender']] . '.</span>';
 					echo '<span class="details3">It has ' . $bathrooms[$row['bathrooms']] . '.</span>';
-					echo '<a class="floorPlan" target="_blank" href="http://www.dartmouth.edu/~orl/images/floor-plans-06/' . $buildCodes[$row['building']] . '-' . $row['floor'] . '.pdf">Floor Plan</a>';
-					echo '<a class="location" target="_blank" href="' . $buildLocs[$row['building']] .'">Location</a>';
-					echo '<a class="link" target="_blank" href="http://dartmouthroomsearch.com?id=' . $row['id'] . '">Link</a>';
+					echo '<a class="floorPlan" href="http://www.dartmouth.edu/~orl/images/floor-plans-06/' . $buildCodes[$row['building']] . '-' . $row['floor'] . '.pdf">Floor Plan</a>';
+					echo '<a class="location" href="' . $buildLocs[$row['building']] .'">Location</a>';
+					echo '<a class="link" href="http://dartmouthroomsearch.com/' . $row['id'] . '">Link</a>';
 					echo '</div>';
 			    }
 			?>
