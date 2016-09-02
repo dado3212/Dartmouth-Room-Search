@@ -81,18 +81,16 @@
 			<?php
 				$minPeople = $_POST["minPeople"];
 				$maxPeople = $_POST["maxPeople"];
-
 				$minRooms = $_POST["minRooms"];
 				$maxRooms = $_POST["maxRooms"];
-
 				$gender = $_POST["gender"];
 				$subFree = $_POST["subFree"];
-
 				$building = $_POST["building"];
+
+				$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? intval($_GET["page"]) : 0;
 
 				$minPeopleSearch = (isset($minPeople) ? $minPeople : "1");
 				$maxPeopleSearch = (isset($maxPeople) ? $maxPeople : "4");
-
 				$minRoomsSearch = (isset($minRooms) ? $minRooms : "1");
 				$maxRoomsSearch = (isset($maxRooms) ? $maxRooms : "3");
 			?>
@@ -200,9 +198,9 @@
 					}
 
 					if (isset($building) && $building == '') {
-						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND subFree = :subFree" . $genderAttach . $order);
+						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND subFree = :subFree LIMIT 20 OFFSET :offset" . $genderAttach . $order);
 					} else {
-						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND building = :building AND subFree = :subFree" . $genderAttach . $order);
+						$stmt = $PDO->prepare("SELECT * FROM rooms WHERE numPeople >= :minPeople AND numPeople <= :maxPeople AND numRooms >= :minRooms AND numRooms <= :maxRooms AND building = :building AND subFree = :subFree LIMIT 20 OFFSET :offset" . $genderAttach . $order);
 						$stmt->bindValue(":building", $building, PDO::PARAM_STR);
 					}
 					$stmt->bindValue(":minPeople", $minPeople, PDO::PARAM_STR);
@@ -210,8 +208,10 @@
 					$stmt->bindValue(":minRooms", $minRooms, PDO::PARAM_STR);
 					$stmt->bindValue(":maxRooms", $maxRooms, PDO::PARAM_STR);
 					$stmt->bindValue(":subFree", $subFree, PDO::PARAM_STR);
+					$stmt->bindValue(":offset", $page * 20, PDO::PARAM_STR);
 				} else {
-					$stmt = $PDO->prepare("SELECT * FROM rooms");
+					$stmt = $PDO->prepare("SELECT * FROM rooms LIMIT 20 OFFSET :offset");
+					$stmt->bindValue(":offset", $page * 20, PDO::PARAM_STR);
 				}
 
 				$stmt->execute();
@@ -248,6 +248,11 @@
 					echo '<a class="link" href="http://dartmouthroomsearch.com/' . $row['id'] . '">Link</a>';
 					echo '</div>';
 			    }
+			    echo "<div class='navigation'>";
+			    if ($page != 0) {
+			    	echo "<a class='prev' href='/page/" . ($page - 1) . "'>← Previous</a>";
+			    }
+			    echo "<a class='next' href='/page/" . ($page + 1) . "'>Next →</a></div>";
 			?>
 			</div>
 			<div class="footer">
