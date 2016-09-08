@@ -1,6 +1,6 @@
 <?php
 	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
+	ini_set("display_errors", 1);
 
 	include_once("../../secret.php");
 
@@ -41,7 +41,8 @@
 		houses.color 
 		FROM buildings LEFT JOIN houses 
 		ON buildings.house = houses.id 
-		ORDER BY houses.name, buildings.name");
+		ORDER BY houses.name, buildings.name
+	");
 	$buildings_stmt->execute();
 
 	$buildings = $buildings_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -133,6 +134,7 @@
 					<span class='plan'>{$building['plan']}</span>
 					<a class='location' target='_blank' rel='noopener' href='{$building['location']}'>Building Location</a>
 					<button class='edit'>Edit</button>
+					<a href='../rooms?building={$building['id']}'>Edit Rooms for Building</a>
 				</div>
 				<div class='form hidden'>
 					<form action='' method='POST'>
@@ -162,7 +164,7 @@
 		";
 	}
 ?>
-	<div class="building" style="background-color: #BBBABA;" data-name="" data-id="0">
+	<div class="building" style="background-color: #BBBABA;">
 		<div class="display">
 			<button class="new">+</span>
 		</div>
