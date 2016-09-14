@@ -103,6 +103,7 @@
 		LEFT JOIN houses
 		ON buildings.house = houses.id
 		WHERE rooms.building = :building
+		ORDER BY rooms.floor, rooms.number
 	");
 	$rooms_stmt->bindValue(":building", $building, PDO::PARAM_STR);
 	$rooms_stmt->execute();
@@ -180,7 +181,65 @@
 		<title>DRS Backend | Rooms</title>
 	</head>
 	<body>
-
+	<?php 
+		$defaultNumber = (isset($_POST["number"])) ? $_POST["number"] : "";
+		$defaultFloor = (isset($_POST["floor"])) ? $_POST["floor"] : 0;
+		$defaultNumRooms = (isset($_POST["numRooms"])) ? $_POST["numRooms"] : 1;
+		$defaultNumPeople = (isset($_POST["numPeople"])) ? $_POST["numPeople"] : 1;
+		$defaultSquareFeet = (isset($_POST["squareFeet"])) ? $_POST["squareFeet"] : 1;
+		$defaultSubFree = (isset($_POST["subFree"])) ? $_POST["subFree"] : 0;
+		$defaultGender = (isset($_POST["gender"])) ? $_POST["gender"] : 0;
+		$defaultBathrooms = (isset($_POST["bathrooms"])) ? $_POST["bathrooms"] : "none";
+	?>
+	<div class="room" style="background-color: #BBBABA;">
+		<div class="display">
+			<button class="new">+</span>
+		</div>
+		<div class="form hidden">
+			<form action="" method="POST">
+				<label for="number">Room Number</label>
+				<input type="text" name="number" value="<?php echo $defaultNumber; ?>">
+				<label for="floor">Floor</label>
+				<select name="floor">
+			<?php foreach ($floorOptions as $value => $string) {
+				$status = ($defaultFloor == $value ? 'selected' : '');
+				echo "<option value='{$value}' $status>{$string}</option>";
+			} ?>
+				</select>
+				<label for="numRooms">Number of Rooms</label>
+				<input type="number" min="1" name="numRooms" value="<?php echo $defaultNumRooms; ?>">
+				<label for="numPeople">Number of People</label>
+				<input type="number" min="1" name="numPeople" value="<?php echo $defaultNumPeople; ?>">
+				<label for="squareFeet">Square Feet</label>
+				<input type="number" min="1" name="squareFeet" value="<?php echo $defaultSquareFeet; ?>">
+				<label for="subFree">Substance Free</label>
+				<select name="subFree">
+			<?php foreach ($substanceFreeOptions as $value => $string) {
+				$status = ($defaultSubFree == $value ? 'selected' : '');
+				echo "<option value='{$value}' $status>{$string}</option>";
+			} ?>
+				</select>
+				<label for="gender">Gender</label>
+				<select name="gender">
+			<?php foreach ($genderOptions as $value => $string) {
+				$status = ($defaultGender == $value ? 'selected' : '');
+				echo "<option value='{$value}' $status>{$string}</option>";
+			} ?>
+				</select>
+				<label for="bathrooms">Bathrooms</label>
+				<select name="bathrooms">
+			<?php foreach ($bathroomOptions as $value => $string) {
+				$status = ($defaultBathrooms == $value ? 'selected' : '');
+				echo "<option value='{$value}' $status>{$string}</option>";
+			} ?>
+				</select>
+				<input type="hidden" name="id" value="0">
+				<input type="hidden" name="building" value="<?php echo $building; ?>">
+				<input type="submit" name="save" value="Save">
+				<input type="submit" name="delete" value="Delete">
+			</form>
+		</div>
+	</div>
 <?php
 	foreach ($rooms as $room) {
 		echo "
@@ -239,51 +298,5 @@
 		";
 	}
 ?>
-	<div class="room" style="background-color: #BBBABA;">
-		<div class="display">
-			<button class="new">+</span>
-		</div>
-		<div class="form hidden">
-			<form action="" method="POST">
-				<label for="number">Room Number</label>
-				<input type="text" name="number" value="">
-				<label for="floor">Floor</label>
-				<select name="floor">
-			<?php foreach ($floorOptions as $value => $string) {
-				echo "<option value='{$value}'>{$string}</option>";
-			} ?>
-				</select>
-				<label for="numRooms">Number of Rooms</label>
-				<input type="number" min="1" name="numRooms" value="1">
-				<label for="numPeople">Number of People</label>
-				<input type="number" min="1" name="numPeople" value="1">
-				<label for="squareFeet">Square Feet</label>
-				<input type="number" min="1" name="squareFeet" value="1">
-				<label for="subFree">Substance Free</label>
-				<select name="subFree">
-			<?php foreach ($substanceFreeOptions as $value => $string) {
-				echo "<option value='{$value}'>{$string}</option>";
-			} ?>
-				</select>
-				<label for="gender">Gender</label>
-				<select name="gender">
-			<?php foreach ($genderOptions as $value => $string) {
-				echo "<option value='{$value}'>{$string}</option>";
-			} ?>
-				</select>
-				<label for="bathrooms">Bathrooms</label>
-				<select name="bathrooms">
-			<?php foreach ($bathroomOptions as $value => $string) {
-				$status = ($room['bathrooms'] == $value ? 'selected' : '');
-				echo "<option value='{$value}' $status>{$string}</option>";
-			} ?>
-				</select>
-				<input type="hidden" name="id" value="0">
-				<input type="hidden" name="building" value="<?php echo $building; ?>">
-				<input type="submit" name="save" value="Save">
-				<input type="submit" name="delete" value="Delete">
-			</form>
-		</div>
-	</div>
 	</body>
 </html>

@@ -346,3 +346,21 @@ body {
 	color: white;
 	margin-left: 30px;
 }
+
+/* 404 */
+.error {
+	padding-bottom: 69px;
+	min-height: 100%;
+}
+
+.error h1 {
+	margin: 0px;
+	font-size: 10em;
+	color: #005D3A;
+	text-align: center;
+}
+
+.error span {
+	display: block;
+	text-align: center;
+}

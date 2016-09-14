@@ -183,7 +183,7 @@
 				<label for="plan">Plan</label>
 				<input type="text" name="plan" value="">
 				<label for="location">Location</label>
-				<input type="text" name="location" value="">
+				<input type="text" name="location" value="http://maps.google.com/?q=">
 				<input type="hidden" name="id" value="0">
 				<input type="submit" name="save" value="Save">
 				<input type="submit" name="delete" value="Delete">

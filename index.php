@@ -85,7 +85,7 @@
 				$maxRooms = $_POST["maxRooms"];
 				$gender = $_POST["gender"];
 				$subFree = $_POST["subFree"];
-				$building = $_POST["building"];
+				$house = $_POST["house"];
 
 				$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? intval($_GET["page"]) : 0;
 
@@ -126,7 +126,7 @@
 				</select>
 				substance free.&nbsp;&nbsp;
 				I want the room to be 
-				<select name="building">
+				<select name="house">
 					<?php
 						error_reporting(E_ALL);
 						ini_set("display_errors", 1);
@@ -135,17 +135,17 @@
 
 						$PDO = createConnection();
 
-						$buildings = $PDO->prepare("SELECT id,name FROM buildings ORDER BY name");
-						$buildings->execute();
-						$buildingOptions = $buildings->fetchAll(PDO::FETCH_ASSOC);
-						array_unshift($buildingOptions, ["id" => 0, "name" => ""]);
+						$houses = $PDO->prepare("SELECT id,name FROM houses ORDER BY name");
+						$houses->execute();
+						$houseOptions = $houses->fetchAll(PDO::FETCH_ASSOC);
+						array_unshift($houseOptions, ["id" => 0, "name" => ""]);
 
-						foreach ($buildingOptions as $buildingOption) {
-							$status = ((isset($building) && $building == $buildingOption["id"]) ? "selected" : "");
-							if ($buildingOption["name"] == "") {
-								echo "<option $status value='{$buildingOption['id']}'>anywhere</option>";
+						foreach ($houseOptions as $houseOption) {
+							$status = ((isset($house) && $house == $houseOption["id"]) ? "selected" : "");
+							if ($houseOption["name"] == "") {
+								echo "<option $status value='{$houseOption['id']}'>anywhere</option>";
 							} else {
-								echo "<option $status value='{$buildingOption['id']}'>in {$buildingOption['name']}</option>";
+								echo "<option $status value='{$houseOption['id']}'>in {$houseOption['name']}</option>";
 							}
 						}
 					?>
@@ -214,7 +214,7 @@
 						$order = " ORDER BY numRooms desc";
 					}
 
-					if (isset($building) && $building == 0) {
+					if (isset($house) && $house == 0) {
 						$stmt = $PDO->prepare("
 							SELECT
 							rooms.*,
@@ -241,7 +241,8 @@
 							buildings.name,
 							buildings.location,
 							buildings.plan,
-							houses.name AS house_name
+							houses.name AS house_name,
+							houses.id AS house_id
 							FROM rooms
 							LEFT JOIN buildings
 							ON rooms.building = buildings.id
@@ -252,11 +253,11 @@
 							numPeople <= :maxPeople AND
 							numRooms >= :minRooms AND
 							numRooms <= :maxRooms AND
-							building = :building AND
+							houses.id = :house_id AND
 							subFree = :subFree" . 
 							$genderAttach . $order . " LIMIT 20 OFFSET :offset
 						");
-						$stmt->bindValue(":building", $building, PDO::PARAM_STR);
+						$stmt->bindValue(":house_id", $house, PDO::PARAM_STR);
 					}
 					$stmt->bindValue(":minPeople", $minPeople, PDO::PARAM_STR);
 					$stmt->bindValue(":maxPeople", $maxPeople, PDO::PARAM_STR);
@@ -285,25 +286,28 @@
 				$stmt->execute();
 				$rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-				$floors = ["Ground Floor","1st Floor","2nd Floor","3rd Floor","4th Floor"];
-				$roomsText = ["One","Two","Three","Four","Five","Six","Seven"];
-				$type = ["single","double","triple","quad","five person suite","six person suite","seven person suite","eight person suite"];
-				$gender = ["either gender","both genders","guys","girls"];
+				$floorOptions = ["Ground Floor","1st Floor","2nd Floor","3rd Floor","4th Floor"];
+				$roomOptions = ["One","Two","Three","Four","Five","Six","Seven"];
+				$typeOptions = ["single","double","triple","quad","five person suite","six person suite","seven person suite","eight person suite"];
+				$genderOptions = ["either gender","both genders","guys","girls"];
 				$genderText = ["The room is for either gender","The room is for both genders","The room is for guys","The room is for girls"];
-				$bathrooms = ["none"=>"no bathrooms","one"=>"one full bathroom","two"=>"two full bathrooms","half"=>"one half bathroom","two half"=>"two half bathrooms","one, half"=>"one full bathroom and one half bathroom","one shared"=>"one shared bathroom"];
+				$bathromOptions = ["none"=>"no bathrooms","one"=>"one full bathroom","two"=>"two full bathrooms","half"=>"one half bathroom","two half"=>"two half bathrooms","one, half"=>"one full bathroom and one half bathroom","one shared"=>"one shared bathroom"];
 
 				foreach ($rooms as $room) {
 					echo '<div class="room">';
 					echo '<div class="top">';
 					if ($room['subFree'] == 1) { echo '<span title="This room is substance free" class="subFree"></span>'; }
-					echo '<span title="' . $genderText[$room['gender']] . '" class="squareFeet ' . substr($gender[$room['gender']],0,4) . '" style="width: ' . floor($room['squareFeet']/100)*26 . 'px"></span>';
+					echo '<span title="' . $genderText[$room['gender']] . '" class="squareFeet ' . substr($genderOptions[$room['gender']],0,4) . '" style="width: ' . floor($room['squareFeet']/100)*26 . 'px"></span>';
 					echo '<span title="The number of rooms" class="numRooms">' . $room['numRooms'] . '</span>';
 					echo '</div>';
-					echo '<span class="info">' . $room['number'] . ' - ' . $room['name'] . ' (' . $floors[$room['floor']] . ')</span>';
-					echo '<span class="details">' . $roomsText[$room['numRooms']-1] . ' room, ' . $type[$room['numPeople']-1] . ' - ' . $room['squareFeet'] . ' ft&sup2;</span>';
-					echo '<span class="details2">It is ' . ($room['subFree'] == 0 ? 'not substance free' : 'substance free' ) . ', and is for ' . $gender[$room['gender']] . '.</span>';
-					echo '<span class="details3">It has ' . $bathrooms[$room['bathrooms']] . '.</span>';
-					echo '<a class="floorPlan" href="' . $room['plan'] . '-' . $room['floor'] . '.pdf">Floor Plan</a>';
+					echo '<span class="info">' . $room['number'] . ' - ' . $room['name'] . ' (' . $floorOptions[$room['floor']] . ')</span>';
+					echo '<span class="details">' . $roomOptions[$room['numRooms']-1] . ' room, ' . $typeOptions[$room['numPeople']-1] . ' - ' . $room['squareFeet'] . ' ft&sup2;</span>';
+					echo '<span class="details2">It is ' . ($room['subFree'] == 0 ? 'not substance free' : 'substance free' ) . ', and is for ' . $genderOptions[$room['gender']] . '.</span>';
+					echo '<span class="details3">It has ' . $bathromOptions[$room['bathrooms']] . '.</span>';
+					if (strpos($room["plan"], '.pdf') !== false)
+						echo '<a class="floorPlan" href="' . $room['plan'] . '-' . $room['floor'] . '.pdf">Floor Plan</a>';
+					else
+						echo '<a class="floorPlan" href="' . $room['plan'] . '">Floor Plan</a>';
 					echo '<a class="location" href="' . $room['location'] .'">Location</a>';
 					echo '<a class="link" href="http://dartmouthroomsearch.com/' . $room['id'] . '">Link</a>';
 					echo '</div>';

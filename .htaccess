@@ -1,4 +1,4 @@
-## EXPIRES CACHING ##
+## Caching expiration ##
 <IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresByType image/jpg "now plus 1 month"
@@ -7,7 +7,6 @@
 	ExpiresByType image/x-icon "now plus 1 month"
 	ExpiresDefault "now plus 2 days"
 </IfModule>
-## EXPIRES CACHING ##
 
 ## Rewrite ##
 <IfModule mod_rewrite.c>
@@ -21,3 +20,6 @@
 
 	RewriteRule "^page/(\d+)/?" "index.php?page=$1"
 </IfModule>
+
+## Custom 404 ##
+ErrorDocument 404 /404.php
