@@ -79,13 +79,13 @@
 				<a href="//dartmouthroomsearch.com">Dartmouth Room Search</a>
 			</div>
 			<?php
-				$minPeople = $_POST["minPeople"];
-				$maxPeople = $_POST["maxPeople"];
-				$minRooms = $_POST["minRooms"];
-				$maxRooms = $_POST["maxRooms"];
-				$gender = $_POST["gender"];
-				$subFree = $_POST["subFree"];
-				$house = $_POST["house"];
+				$minPeople = isset($_POST["minPeople"]) ? $_POST["minPeople"] : null;
+				$maxPeople = isset($_POST["maxPeople"]) ? $_POST["maxPeople"] : null;
+				$minRooms = isset($_POST["minRooms"]) ? $_POST["minRooms"] : null;
+				$maxRooms = isset($_POST["maxRooms"]) ? $_POST["maxRooms"] : null;
+				$gender = isset($_POST["gender"]) ? $_POST["gender"] : null;
+				$subFree = isset($_POST["subFree"]) ? $_POST["subFree"] : null;
+				$house = isset($_POST["house"]) ? $_POST["house"] : null;
 
 				$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? intval($_GET["page"]) : 0;
 
