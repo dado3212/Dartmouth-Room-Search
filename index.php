@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -79,13 +80,26 @@
 				<a href="//dartmouthroomsearch.com">Dartmouth Room Search</a>
 			</div>
 			<?php
-				$minPeople = isset($_POST["minPeople"]) ? $_POST["minPeople"] : null;
-				$maxPeople = isset($_POST["maxPeople"]) ? $_POST["maxPeople"] : null;
-				$minRooms = isset($_POST["minRooms"]) ? $_POST["minRooms"] : null;
-				$maxRooms = isset($_POST["maxRooms"]) ? $_POST["maxRooms"] : null;
-				$gender = isset($_POST["gender"]) ? $_POST["gender"] : null;
-				$subFree = isset($_POST["subFree"]) ? $_POST["subFree"] : null;
-				$house = isset($_POST["house"]) ? $_POST["house"] : null;
+				function findValue($string) {
+					if (isset($_POST[$string])) {
+						$_SESSION[$string] = $_POST[$string];
+						return $_POST[$string];
+					} else if (isset($_SESSION[$string])) {
+						return $_SESSION[$string];
+					} else {
+						return null;
+					}
+				}
+
+				$minPeople = findValue("minPeople");
+				$maxPeople = findValue("maxPeople");
+				$minRooms = findValue("minRooms");
+				$maxRooms = findValue("maxRooms");
+				$gender = findValue("gender");
+				$subFree = findValue("subFree");
+				$house = findValue("house");
+
+				$order = findValue("order");
 
 				$page = (isset($_GET["page"]) && is_numeric($_GET["page"])) ? intval($_GET["page"]) : 0;
 
@@ -94,7 +108,7 @@
 				$minRoomsSearch = (isset($minRooms) ? $minRooms : "1");
 				$maxRoomsSearch = (isset($maxRooms) ? $maxRooms : "3");
 			?>
-			<form name="search" id="search" method="post" action="">
+			<form name="search" id="search" method="post" action="/">
 				I'm looking for a room for between
 				<input type="number" name="minPeople" min="1" value="<?php echo $minPeopleSearch; ?>">
 				and
@@ -105,22 +119,22 @@
 				<input type="number" name="maxRooms" value="<?php echo $maxRoomsSearch; ?>">
 				rooms.&nbsp;&nbsp;The roommates will be  
 				<select name="gender">
-					<option value="a" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "a") {echo "selected";} ?>>
+					<option value="a" <?php if ($gender == "a") {echo "selected";} ?>>
 						guys
 					</option>
-					<option value="b" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "b") {echo "selected";} ?>>
+					<option value="b" <?php if ($gender == "b") {echo "selected";} ?>>
 						girls
 					</option>
-					<option value="c" <?php if (isset($_POST["gender"]) && $_POST["gender"] == "c") {echo "selected";} ?>>
+					<option value="c" <?php if ($gender == "c") {echo "selected";} ?>>
 						both
 					</option>
 				</select>
 				, and it 
 				<select name="subFree">
-					<option <?php if (isset($_POST["subFree"]) && $_POST["subFree"] == "0") { echo "selected";} ?> value="0">
+					<option <?php if ($subFree == "0") { echo "selected";} ?> value="0">
 						should not be
 					</option>
-					<option <?php if (isset($_POST["subFree"]) && $_POST["subFree"] == "1") { echo "selected";} ?> value="1">
+					<option <?php if ($subFree == "1") { echo "selected";} ?> value="1">
 						should be
 					</option>
 				</select>
@@ -152,16 +166,16 @@
 				</select>
 				, and I want the results to be ordered by
 				<select name="order">
-					<option value="0" <?php if (isset($_POST["order"]) && $_POST["order"] == "0") {echo "selected";} ?>>
+					<option value="0" <?php if ($order == "0") {echo "selected";} ?>>
 						square feet
 					</option>
-					<option value="1" <?php if (isset($_POST["order"]) && $_POST["order"] == "1") {echo "selected";} ?>>
+					<option value="1" <?php if ($order == "1") {echo "selected";} ?>>
 						square feet per person
 					</option>
-					<option value="2" <?php if (isset($_POST["order"]) && $_POST["order"] == "2") {echo "selected";} ?>>
+					<option value="2" <?php if ($order == "2") {echo "selected";} ?>>
 						number of people
 					</option>
-					<option value="3" <?php if (isset($_POST["order"]) && $_POST["order"] == "3") {echo "selected";} ?>>
+					<option value="3" <?php if ($order == "3") {echo "selected";} ?>>
 						number of rooms
 					</option>
 				</select>
@@ -195,23 +209,23 @@
 					$stmt->bindValue(":id", $_GET["id"], PDO::PARAM_STR);
 				} else if (isset($minPeople)) {
 					$genderAttach = "";
-					if ($_POST["gender"] == "a") {
+					if ($gender == "a") {
 						$genderAttach = " AND (gender = 0 OR gender = 1 OR gender = 2)";
-					} else if ($_POST["gender"] == "b") {
+					} else if ($gender == "b") {
 						$genderAttach = " AND (gender = 0 OR gender = 1 OR gender = 3)";
-					} else if ($_POST["gender"] == "c") {
+					} else if ($gender == "c") {
 						$genderAttach = " AND (gender = 1)";
 					}
 
-					$order = "";
-					if ($_POST["order"] == 0) {
-						$order = " ORDER BY squareFeet desc";
-					} else if ($_POST["order"] == 1) {
-						$order = " ORDER BY squareFeet / numPeople desc";
-					} else if ($_POST["order"] == 2) {
-						$order = " ORDER BY numPeople desc";
-					} else if ($_POST["order"] == 3) {
-						$order = " ORDER BY numRooms desc";
+					$orderAttach = "";
+					if ($order == 0) {
+						$orderAttach = " ORDER BY squareFeet desc";
+					} else if ($order == 1) {
+						$orderAttach = " ORDER BY squareFeet / numPeople desc";
+					} else if ($order == 2) {
+						$orderAttach = " ORDER BY numPeople desc";
+					} else if ($order == 3) {
+						$orderAttach = " ORDER BY numRooms desc";
 					}
 
 					if (isset($house) && $house == 0) {
@@ -232,7 +246,7 @@
 							numPeople <= :maxPeople AND
 							numRooms >= :minRooms AND
 							numRooms <= :maxRooms AND
-							subFree = :subFree" . $genderAttach . $order . " LIMIT 20 OFFSET :offset
+							subFree = :subFree" . $genderAttach . $orderAttach . " LIMIT 20 OFFSET :offset
 						");
 					} else {
 						$stmt = $PDO->prepare("
@@ -255,7 +269,7 @@
 							numRooms <= :maxRooms AND
 							houses.id = :house_id AND
 							subFree = :subFree" . 
-							$genderAttach . $order . " LIMIT 20 OFFSET :offset
+							$genderAttach . $orderAttach . " LIMIT 20 OFFSET :offset
 						");
 						$stmt->bindValue(":house_id", $house, PDO::PARAM_STR);
 					}
